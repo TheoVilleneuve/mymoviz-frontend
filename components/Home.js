@@ -1,20 +1,20 @@
-import { useState } from 'react';
-import { Popover, Button } from 'antd';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
-import Movie from './Movie';
-import 'antd/dist/antd.css';
-import styles from '../styles/Home.module.css';
-import { useEffect } from 'react';
+import { useState } from "react";
+import { Popover, Button } from "antd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import Movie from "./Movie";
+import "antd/dist/antd.css";
+import styles from "../styles/Home.module.css";
+import { useEffect } from "react";
 
 function Home() {
   const [likedMovies, setLikedMovies] = useState([]);
-  const [moviesData, setMoviesData]=useState([]);
+  const [moviesData, setMoviesData] = useState([]);
 
   // Liked movies (inverse data flow)
   const updateLikedMovies = (movieTitle) => {
-    if (likedMovies.find(movie => movie === movieTitle)) {
-      setLikedMovies(likedMovies.filter(movie => movie !== movieTitle));
+    if (likedMovies.find((movie) => movie === movieTitle)) {
+      setLikedMovies(likedMovies.filter((movie) => movie !== movieTitle));
     } else {
       setLikedMovies([...likedMovies, movieTitle]);
     }
@@ -24,15 +24,17 @@ function Home() {
     return (
       <div key={i} className={styles.likedMoviesContainer}>
         <span className="likedMovie">{data}</span>
-        <FontAwesomeIcon icon={faCircleXmark} onClick={() => updateLikedMovies(data)} className={styles.crossIcon} />
+        <FontAwesomeIcon
+          icon={faCircleXmark}
+          onClick={() => updateLikedMovies(data)}
+          className={styles.crossIcon}
+        />
       </div>
     );
   });
 
   const popoverContent = (
-    <div className={styles.popoverContent}>
-      {likedMoviesPopover}
-    </div>
+    <div className={styles.popoverContent}>{likedMoviesPopover}</div>
   );
 
   // Movies list
@@ -44,58 +46,70 @@ function Home() {
   //   { title: 'Inception', poster: 'inception.jpg', voteAverage: 8.4, voteCount: 31_546, overview: 'Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life.' },
   // ];
 
-  //REMPLACEMENT DE LA LISTE MOVIESDATA 
+  //REMPLACEMENT DE LA LISTE MOVIESDATA
   // useEffect(() => {
   // fetch('http://localhost:3000/movies')
   // .then(response => response.json())
   // .then(data => {console.log(data)
-    // for (let i=0; i<data.length; i++){
-    //   let newMovie={}
-    //   newMovie.title = data.title,
-    //   newMovie.poster = data.poster,
-    //   newMovie.voteAverage = data.vote_average,
-    //   newMovie.voteCount = data.vote_count,
-    //   newMovie.overview = data.overview
-    //   setMoviesData([...moviesData, newMovie])
+  // for (let i=0; i<data.length; i++){
+  //   let newMovie={}
+  //   newMovie.title = data.title,
+  //   newMovie.poster = data.poster,
+  //   newMovie.voteAverage = data.vote_average,
+  //   newMovie.voteCount = data.vote_count,
+  //   newMovie.overview = data.overview
+  //   setMoviesData([...moviesData, newMovie])
   //   }
   // })
-    // console.log(moviesData)
+  // console.log(moviesData)
   //   console.log('Mount');
   // }, []);
 
-  let listOfMovies=[]
+  let listOfMovies = [];
   useEffect(() => {
-    fetch('https://mymoviz-back-theta.vercel.app/movies')
-    .then(response => response.json())
-    .then(data => {
-      let results = data.movies
-      for (let movie of results){
-        //ajout des films dans listOfMovies
-        listOfMovies.push({title: movie.title,
-          poster: movie.poster_path,
-          voteAverage: movie.vote_average,
-          voteCount: movie.vote_count,
-          overview: movie.overview
-        })      
-      }
-      //ajout de la listOfMovies dans l'état
-      setMoviesData(listOfMovies)
-      console.log(moviesData)
-    })
-    console.log('Mount');
+    fetch("https://mymoviz-back-theta.vercel.app/movies")
+      .then((response) => response.json())
+      .then((data) => {
+        let results = data.movies;
+        for (let movie of results) {
+          //ajout des films dans listOfMovies
+          listOfMovies.push({
+            title: movie.title,
+            poster: movie.poster_path,
+            voteAverage: movie.vote_average,
+            voteCount: movie.vote_count,
+            overview: movie.overview,
+          });
+        }
+        //ajout de la listOfMovies dans l'état
+        setMoviesData(listOfMovies);
+        console.log(moviesData);
+      });
+    console.log("Mount");
   }, []);
-  
+
   //fonction pour tronquer si overview>250 caractères
   function truncateString(str) {
-    if (str.length > 250){
-      str = str.slice(0,249) + '...'
+    if (str.length > 250) {
+      str = str.slice(0, 249) + "...";
     }
     return str;
   }
-  
+
   const movies = moviesData.map((data, i) => {
-    const isLiked = likedMovies.some(movie => movie === data.title);
-    return <Movie key={i} updateLikedMovies={updateLikedMovies} isLiked={isLiked} title={data.title} overview={truncateString(data.overview)} poster={data.poster} voteAverage={data.voteAverage} voteCount={data.voteCount} />;
+    const isLiked = likedMovies.some((movie) => movie === data.title);
+    return (
+      <Movie
+        key={i}
+        updateLikedMovies={updateLikedMovies}
+        isLiked={isLiked}
+        title={data.title}
+        overview={truncateString(data.overview)}
+        poster={data.poster}
+        voteAverage={data.voteAverage}
+        voteCount={data.voteCount}
+      />
+    );
   });
 
   return (
@@ -105,14 +119,17 @@ function Home() {
           <img src="logo.png" alt="Logo" />
           <img className={styles.logo} src="logoletter.png" alt="Letter logo" />
         </div>
-        <Popover title="Liked movies" content={popoverContent} className={styles.popover} trigger="click">
+        <Popover
+          title="Liked movies"
+          content={popoverContent}
+          className={styles.popover}
+          trigger="click"
+        >
           <Button>♥ {likedMovies.length} movie(s)</Button>
         </Popover>
       </div>
       <div className={styles.title}>LAST RELEASES</div>
-      <div className={styles.moviesContainer}>
-        {movies}
-      </div>
+      <div className={styles.moviesContainer}>{movies}</div>
     </div>
   );
 }
