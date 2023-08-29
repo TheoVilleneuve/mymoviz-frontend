@@ -67,7 +67,7 @@ function Home() {
 
   let listOfMovies = [];
   useEffect(() => {
-    fetch("https://mymoviz-back-theta.vercel.app/movies")
+    fetch("http://mymoviz-backend.theovilleneuve.com/movies")
       .then((response) => response.json())
       .then((data) => {
         let results = data.movies;
